@@ -19,7 +19,7 @@ public class ParkingGUI extends JFrame implements ActionListener, TableModelList
 	
 	private static final long serialVersionUID = 1779520078061383929L;
 	private JButton btnList, btnSearch, btnAdd;
-	private JPanel pnlButtons, pnlContent;
+	private JPanel pnlButtons, pnlList;
 	private ParkingDB db;
 	private List<Lot> myLotList;
 	private String[] columnNames = {
@@ -40,8 +40,7 @@ public class ParkingGUI extends JFrame implements ActionListener, TableModelList
 	private JPanel pnlAdd;
 	private JLabel[] txfLabel = new JLabel[4];
 	private JTextField[] txfField = new JTextField[4];
-	private JButton btnAddLot;
-	
+	private JButton btnAddLot;	
 	
 	/**
 	 * Creates the frame and components and launches the GUI.
@@ -89,10 +88,10 @@ public class ParkingGUI extends JFrame implements ActionListener, TableModelList
 		add(pnlButtons, BorderLayout.NORTH);
 		
 		//List Panel
-		pnlContent = new JPanel();
+		pnlList = new JPanel();
 		table = new JTable(data, columnNames);
 		scrollPane = new JScrollPane(table);
-		pnlContent.add(scrollPane);
+		pnlList.add(scrollPane);
 		table.getModel().addTableModelListener(this);
 		
 		//Search Panel
@@ -123,7 +122,8 @@ public class ParkingGUI extends JFrame implements ActionListener, TableModelList
 		panel.add(btnAddLot);
 		pnlAdd.add(panel);
 		
-		add(pnlContent, BorderLayout.CENTER);		
+		//Update panel
+		add(pnlList, BorderLayout.CENTER);		
 	}
 	/**
 	 * @param args
@@ -152,23 +152,23 @@ public class ParkingGUI extends JFrame implements ActionListener, TableModelList
 				data[i][2] = myLotList.get(i).getCapacity();
 				data[i][3] = myLotList.get(i).getFloors();	
 			}
-			pnlContent.removeAll();
+			pnlList.removeAll();
 			table = new JTable(data, columnNames);
 			table.getModel().addTableModelListener(this);
 			scrollPane = new JScrollPane(table);
-			pnlContent.add(scrollPane);
-			pnlContent.revalidate();
+			pnlList.add(scrollPane);
+			pnlList.revalidate();
 			this.repaint();
 			
 		} else if (e.getSource() == btnSearch) {
-			pnlContent.removeAll();
-			pnlContent.add(pnlSearch);
-			pnlContent.revalidate();
+			pnlList.removeAll();
+			pnlList.add(pnlSearch);
+			pnlList.revalidate();
 			this.repaint();
 		} else if (e.getSource() == btnAdd) {
-			pnlContent.removeAll();
-			pnlContent.add(pnlAdd);
-			pnlContent.revalidate();
+			pnlList.removeAll();
+			pnlList.add(pnlAdd);
+			pnlList.revalidate();
 			this.repaint();
 			
 		} else if (e.getSource() == btnLotNameSearch) {
@@ -188,12 +188,12 @@ public class ParkingGUI extends JFrame implements ActionListener, TableModelList
 					data[i][2] = myLotList.get(i).getCapacity();
 					data[i][3] = myLotList.get(i).getFloors();	
 				}
-				pnlContent.removeAll();
+				pnlList.removeAll();
 				table = new JTable(data, columnNames);
 				table.getModel().addTableModelListener(this);
 				scrollPane = new JScrollPane(table);
-				pnlContent.add(scrollPane);
-				pnlContent.revalidate();
+				pnlList.add(scrollPane);
+				pnlList.revalidate();
 				this.repaint();
 			}
 		} else if (e.getSource() == btnAddLot) {

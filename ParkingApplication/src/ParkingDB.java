@@ -25,8 +25,7 @@ public class ParkingDB {
 //	private List<CoveredSpace> myCoveredSpaceList;
 //	private List<UncoveredSpace> myUncoveredSpaceList;
 //	private List<StaffSpace> myStaffSpaceList;
-//	private List<SpaceBooking> mySpaceBookingList;
-	
+//	private List<SpaceBooking> mySpaceBookingList;	
 
 	/**
 	 * Creates a sql connection to MySQL using the properties for
@@ -34,7 +33,7 @@ public class ParkingDB {
 	 * @throws SQLException
 	 */
 	public static void createConnection() throws SQLException {
-		sConnection =  DriverManager
+		sConnection = DriverManager
 				.getConnection("jdbc:mysql://" + serverName + "/" + userName + "?user=" + userName + "&password=" + password);
 		//Uncomment For Debugging - System.out.println("Connected to database");
 	}
@@ -126,12 +125,11 @@ public class ParkingDB {
 	 * @param data value to supply
 	 * @throws Exception 
 	 */
-	public void updateLot(int row, String columnName, Object data) throws Exception {
-		
+	public void updateLot(int row, String columnName, Object data) throws Exception {		
 		Lot lot = myLotList.get(row);
 		String lotName = lot.getLotName();
 		
-		String sql = "update Lot set " + columnName + " = ?  where lotName = ? ";
+		String sql = "update LOT set " + columnName + " = ?  where lotName = ? ";
 		PreparedStatement preparedStatement = null;
 		try {
 			preparedStatement = sConnection.prepareStatement(sql);
@@ -145,7 +143,6 @@ public class ParkingDB {
 		} catch (SQLException e) {
 			e.printStackTrace();
 			throw new Exception("Unable to add Lot: " + e.getMessage());
-		} 
-		
+		} 		
 	}
 }
