@@ -18,12 +18,12 @@ import javax.swing.table.TableModel;
 public class ParkingGUI extends JFrame implements ActionListener, TableModelListener {
 	
 	private static final long serialVersionUID = 1779520078061383929L;
-	private JButton btnList, btnSearch, btnAdd;
-	private JPanel pnlButtons, pnlList;
+	private JButton listLotsBtn, searchLotsBtn, addLotsButton;
+	private JPanel lotButtons, lotPanelList;
 	private ParkingDB db;
 	private List<Lot> myLotList;
-	private String[] columnNames = {
-			"LotName",
+	private String[] lotColumns = {
+			"Lot Name",
             "Location",
             "Capacity",
             "Floors"
@@ -34,13 +34,13 @@ public class ParkingGUI extends JFrame implements ActionListener, TableModelList
 	private JScrollPane scrollPane;
 	private JPanel pnlSearch;
 	private JLabel lblLotName;;
-	private JTextField txfLotName;
-	private JButton btnLotNameSearch;
+	private JTextField lotNameField;
+	private JButton searchLotsPanelBtn;
 	
 	private JPanel pnlAdd;
-	private JLabel[] txfLabel = new JLabel[4];
-	private JTextField[] txfField = new JTextField[4];
-	private JButton btnAddLot;	
+	private JLabel[] lotLabel = new JLabel[4];
+	private JTextField[] lotField = new JTextField[4];
+	private JButton addLotsPanelBtn;	
 	
 	/**
 	 * Creates the frame and components and launches the GUI.
@@ -50,7 +50,7 @@ public class ParkingGUI extends JFrame implements ActionListener, TableModelList
 		db = new ParkingDB();
 		try	{
 			myLotList = db.getLots();		
-			data = new Object[myLotList.size()][columnNames.length];
+			data = new Object[myLotList.size()][lotColumns.length];
 			for (int i = 0; i < myLotList.size(); i++) {
 				data[i][0] = myLotList.get(i).getLotName();
 				data[i][1] = myLotList.get(i).getLocation();
@@ -72,37 +72,37 @@ public class ParkingGUI extends JFrame implements ActionListener, TableModelList
 	 * components to each panel.
 	 */
 	private void createComponents()	{
-		pnlButtons = new JPanel();
-		btnList = new JButton("Lot List");
-		btnList.addActionListener(this);
+		lotButtons = new JPanel();
+		listLotsBtn = new JButton("Lot List");
+		listLotsBtn.addActionListener(this);
 		
-		btnSearch = new JButton("Lot Search");
-		btnSearch.addActionListener(this);
+		searchLotsBtn = new JButton("Lot Search");
+		searchLotsBtn.addActionListener(this);
 		
-		btnAdd = new JButton("Add Lot");
-		btnAdd.addActionListener(this);
+		addLotsButton = new JButton("Add Lot");
+		addLotsButton.addActionListener(this);
 		
-		pnlButtons.add(btnList);
-		pnlButtons.add(btnSearch);
-		pnlButtons.add(btnAdd);
-		add(pnlButtons, BorderLayout.NORTH);
+		lotButtons.add(listLotsBtn);
+		lotButtons.add(searchLotsBtn);
+		lotButtons.add(addLotsButton);
+		add(lotButtons, BorderLayout.NORTH);
 		
 		//List Panel
-		pnlList = new JPanel();
-		table = new JTable(data, columnNames);
+		lotPanelList = new JPanel();
+		table = new JTable(data, lotColumns);
 		scrollPane = new JScrollPane(table);
-		pnlList.add(scrollPane);
+		lotPanelList.add(scrollPane);
 		table.getModel().addTableModelListener(this);
 		
 		//Search Panel
 		pnlSearch = new JPanel();
 		lblLotName = new JLabel("Enter Lot Name: ");
-		txfLotName = new JTextField(25);
-		btnLotNameSearch = new JButton("Search");
-		btnLotNameSearch.addActionListener(this);
+		lotNameField = new JTextField(25);
+		searchLotsPanelBtn = new JButton("Search");
+		searchLotsPanelBtn.addActionListener(this);
 		pnlSearch.add(lblLotName);
-		pnlSearch.add(txfLotName);
-		pnlSearch.add(btnLotNameSearch);
+		pnlSearch.add(lotNameField);
+		pnlSearch.add(searchLotsPanelBtn);
 		
 		//Add Panel
 		pnlAdd = new JPanel();
@@ -110,20 +110,20 @@ public class ParkingGUI extends JFrame implements ActionListener, TableModelList
 		String labelNames[] = {"Enter Lot Name: ", "Enter Location: ", "Enter Capacity: ", "Enter Floors: "};
 		for (int i = 0; i < labelNames.length; i++) {
 			JPanel panel = new JPanel();
-			txfLabel[i] = new JLabel(labelNames[i]);
-			txfField[i] = new JTextField(25);
-			panel.add(txfLabel[i]);
-			panel.add(txfField[i]);
+			lotLabel[i] = new JLabel(labelNames[i]);
+			lotField[i] = new JTextField(25);
+			panel.add(lotLabel[i]);
+			panel.add(lotField[i]);
 			pnlAdd.add(panel);
 		}
 		JPanel panel = new JPanel();
-		btnAddLot = new JButton("Add");
-		btnAddLot.addActionListener(this);
-		panel.add(btnAddLot);
+		addLotsPanelBtn = new JButton("Add");
+		addLotsPanelBtn.addActionListener(this);
+		panel.add(addLotsPanelBtn);
 		pnlAdd.add(panel);
 		
 		//Update panel
-		add(pnlList, BorderLayout.CENTER);		
+		add(lotPanelList, BorderLayout.CENTER);		
 	}
 	/**
 	 * @param args
@@ -138,41 +138,41 @@ public class ParkingGUI extends JFrame implements ActionListener, TableModelList
 	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == btnList) {
+		if (e.getSource() == listLotsBtn) {
 			try {
 				myLotList = db.getLots();
 			} catch (Exception exception) {
 				JOptionPane.showMessageDialog(this, exception.getMessage());
 				return;
 			}
-			data = new Object[myLotList.size()][columnNames.length];
+			data = new Object[myLotList.size()][lotColumns.length];
 			for (int i = 0; i < myLotList.size(); i++) {
 				data[i][0] = myLotList.get(i).getLotName();
 				data[i][1] = myLotList.get(i).getLocation();
 				data[i][2] = myLotList.get(i).getCapacity();
 				data[i][3] = myLotList.get(i).getFloors();	
 			}
-			pnlList.removeAll();
-			table = new JTable(data, columnNames);
+			lotPanelList.removeAll();
+			table = new JTable(data, lotColumns);
 			table.getModel().addTableModelListener(this);
 			scrollPane = new JScrollPane(table);
-			pnlList.add(scrollPane);
-			pnlList.revalidate();
+			lotPanelList.add(scrollPane);
+			lotPanelList.revalidate();
 			this.repaint();
 			
-		} else if (e.getSource() == btnSearch) {
-			pnlList.removeAll();
-			pnlList.add(pnlSearch);
-			pnlList.revalidate();
+		} else if (e.getSource() == searchLotsBtn) {
+			lotPanelList.removeAll();
+			lotPanelList.add(pnlSearch);
+			lotPanelList.revalidate();
 			this.repaint();
-		} else if (e.getSource() == btnAdd) {
-			pnlList.removeAll();
-			pnlList.add(pnlAdd);
-			pnlList.revalidate();
+		} else if (e.getSource() == addLotsButton) {
+			lotPanelList.removeAll();
+			lotPanelList.add(pnlAdd);
+			lotPanelList.revalidate();
 			this.repaint();
 			
-		} else if (e.getSource() == btnLotNameSearch) {
-			String lotName = txfLotName.getText();
+		} else if (e.getSource() == searchLotsPanelBtn) {
+			String lotName = lotNameField.getText();
 			if (lotName.length() > 0) {
 				try {
 					myLotList = db.getLots(lotName);
@@ -181,24 +181,24 @@ public class ParkingGUI extends JFrame implements ActionListener, TableModelList
 					JOptionPane.showMessageDialog(this, exception.getMessage());
 					return;
 				}
-				data = new Object[myLotList.size()][columnNames.length];
+				data = new Object[myLotList.size()][lotColumns.length];
 				for (int i = 0; i < myLotList.size(); i++) {
 					data[i][0] = myLotList.get(i).getLotName();
 					data[i][1] = myLotList.get(i).getLocation();
 					data[i][2] = myLotList.get(i).getCapacity();
 					data[i][3] = myLotList.get(i).getFloors();	
 				}
-				pnlList.removeAll();
-				table = new JTable(data, columnNames);
+				lotPanelList.removeAll();
+				table = new JTable(data, lotColumns);
 				table.getModel().addTableModelListener(this);
 				scrollPane = new JScrollPane(table);
-				pnlList.add(scrollPane);
-				pnlList.revalidate();
+				lotPanelList.add(scrollPane);
+				lotPanelList.revalidate();
 				this.repaint();
 			}
-		} else if (e.getSource() == btnAddLot) {
-			Lot lot = new Lot(txfField[0].getText(), txfField[1].getText(), 
-					Integer.parseInt(txfField[2].getText()), Integer.parseInt(txfField[3].getText()));
+		} else if (e.getSource() == addLotsPanelBtn) {
+			Lot lot = new Lot(lotField[0].getText(), lotField[1].getText(), 
+					Integer.parseInt(lotField[2].getText()), Integer.parseInt(lotField[3].getText()));
 			try {
 				db.addLot(lot);
 			}
@@ -207,8 +207,8 @@ public class ParkingGUI extends JFrame implements ActionListener, TableModelList
 				return;
 			}
 			JOptionPane.showMessageDialog(null, "Added Successfully!");
-			for (int i = 0; i < txfField.length; i++) {
-				txfField[i].setText("");
+			for (int i = 0; i < lotField.length; i++) {
+				lotField[i].setText("");
 			}
 		}
 		
