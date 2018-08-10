@@ -446,7 +446,7 @@ public class ParkingDB {
 			createConnection();
 		}
 		Statement stmt = null;
-		String  query = "select staffNumber, telephoneExt, vehicleLicenseNumber" + "from STAFF";
+		String  query = "select staffNumber, telephoneExt, vehicleLicenseNumber " + "from STAFF";
 		myStaffList = new ArrayList<Staff>();
 		try {
 			stmt = sConnection.createStatement();
@@ -461,7 +461,7 @@ public class ParkingDB {
 		} catch (SQLException e) {
 			e.printStackTrace();
 			throw new Exception("Unable to retrieve list of Staff: " + e.getMessage());
-		}finally {
+		} finally {
 			if (stmt != null) {
 				stmt.close();
 			}

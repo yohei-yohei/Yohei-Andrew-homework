@@ -10,7 +10,7 @@ import javax.swing.table.TableModel;
 
 /**
  * A user interface to view the lots, add a new lot and to update an existing lot.
- * The myLotList is a table with all the movie information in it. The TableModelListener listens to
+ * The myStaffList is a table with all the movie information in it. The TableModelListener listens to
  * any changes to the cells to modify the values to reach lot.
  * @author atrolph, mmuppa
  *
@@ -19,17 +19,18 @@ public class ParkingGUI extends JFrame implements ActionListener, TableModelList
 	
 	private static final long serialVersionUID = 1779520078061383929L;
 	private JButton listLotsBtn, searchLotsBtn, addLotsButton;
-	private JPanel lotButtons, lotPanelList;
+	private JPanel lotButtons, staffListPanel;
 	private ParkingDB db;
-	private List<Lot> myLotList;
-	private String[] lotColumns = {
-			"Lot Name",
-            "Location",
-            "Capacity",
-            "Floors"
+	private List<Staff> myStaffList;
+	
+	private String[] staffColumns = {
+			"Staff Number",
+            "Telephone Extension",
+            "License Number",
     };
 	
-	private Object[][] data;
+	private Object[][] staffData;
+
 	private JTable table;
 	private JScrollPane scrollPane;
 	private JPanel pnlSearch;
@@ -38,8 +39,8 @@ public class ParkingGUI extends JFrame implements ActionListener, TableModelList
 	private JButton searchLotsPanelBtn;
 	
 	private JPanel pnlAdd;
-	private JLabel[] lotLabel = new JLabel[4];
-	private JTextField[] lotField = new JTextField[4];
+	private JLabel[] staffLabel = new JLabel[3];
+	private JTextField[] staffField = new JTextField[3];
 	private JButton addLotsPanelBtn;	
 	
 	/**
@@ -49,13 +50,12 @@ public class ParkingGUI extends JFrame implements ActionListener, TableModelList
 		super("Parking");		
 		db = new ParkingDB();
 		try	{
-			myLotList = db.getLots();		
-			data = new Object[myLotList.size()][lotColumns.length];
-			for (int i = 0; i < myLotList.size(); i++) {
-				data[i][0] = myLotList.get(i).getLotName();
-				data[i][1] = myLotList.get(i).getLocation();
-				data[i][2] = myLotList.get(i).getCapacity();
-				data[i][3] = myLotList.get(i).getFloors();				
+			myStaffList = db.getStaff();
+			staffData = new Object[myStaffList.size()][staffColumns.length];
+			for (int i = 0; i < myStaffList.size(); i++) {
+				staffData[i][0] = myStaffList.get(i).getStaffNumber();
+				staffData[i][1] = myStaffList.get(i).getTelephoneExt();
+				staffData[i][2] = myStaffList.get(i).getVehicleLicenseNumber();			
 			}
 			
 		} catch (Exception e) {
@@ -66,9 +66,11 @@ public class ParkingGUI extends JFrame implements ActionListener, TableModelList
 		setVisible(true);
 		setSize(500, 500);
 	}
+	
+	
     
 	/**
-	 * Creates panels for Movie myLotList, search, add and adds the corresponding 
+	 * Creates panels for Movie myStaffList, search, add and adds the corresponding 
 	 * components to each panel.
 	 */
 	private void createComponents()	{
@@ -88,10 +90,10 @@ public class ParkingGUI extends JFrame implements ActionListener, TableModelList
 		add(lotButtons, BorderLayout.NORTH);
 		
 		//List Panel
-		lotPanelList = new JPanel();
-		table = new JTable(data, lotColumns);
+		staffListPanel = new JPanel();
+		table = new JTable(staffData, staffColumns);
 		scrollPane = new JScrollPane(table);
-		lotPanelList.add(scrollPane);
+		staffListPanel.add(scrollPane);
 		table.getModel().addTableModelListener(this);
 		
 		//Search Panel
@@ -107,13 +109,13 @@ public class ParkingGUI extends JFrame implements ActionListener, TableModelList
 		//Add Panel
 		pnlAdd = new JPanel();
 		pnlAdd.setLayout(new GridLayout(6, 0));
-		String labelNames[] = {"Enter Lot Name: ", "Enter Location: ", "Enter Capacity: ", "Enter Floors: "};
+		String labelNames[] = {"Enter Staff Number: ", "Enter Telephone Extension: ", "Enter License Number: "};
 		for (int i = 0; i < labelNames.length; i++) {
 			JPanel panel = new JPanel();
-			lotLabel[i] = new JLabel(labelNames[i]);
-			lotField[i] = new JTextField(25);
-			panel.add(lotLabel[i]);
-			panel.add(lotField[i]);
+			staffLabel[i] = new JLabel(labelNames[i]);
+			staffField[i] = new JTextField(25);
+			panel.add(staffLabel[i]);
+			panel.add(staffField[i]);
 			pnlAdd.add(panel);
 		}
 		JPanel panel = new JPanel();
@@ -123,7 +125,7 @@ public class ParkingGUI extends JFrame implements ActionListener, TableModelList
 		pnlAdd.add(panel);
 		
 		//Update panel
-		add(lotPanelList, BorderLayout.CENTER);		
+		add(staffListPanel, BorderLayout.CENTER);		
 	}
 	/**
 	 * @param args
@@ -140,75 +142,73 @@ public class ParkingGUI extends JFrame implements ActionListener, TableModelList
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == listLotsBtn) {
 			try {
-				myLotList = db.getLots();
+				myStaffList = db.getStaff();
 			} catch (Exception exception) {
 				JOptionPane.showMessageDialog(this, exception.getMessage());
 				return;
 			}
-			data = new Object[myLotList.size()][lotColumns.length];
-			for (int i = 0; i < myLotList.size(); i++) {
-				data[i][0] = myLotList.get(i).getLotName();
-				data[i][1] = myLotList.get(i).getLocation();
-				data[i][2] = myLotList.get(i).getCapacity();
-				data[i][3] = myLotList.get(i).getFloors();	
+			staffData = new Object[myStaffList.size()][staffColumns.length];
+			for (int i = 0; i < myStaffList.size(); i++) {
+				staffData[i][0] = myStaffList.get(i).getStaffNumber();
+				staffData[i][1] = myStaffList.get(i).getTelephoneExt();
+				staffData[i][2] = myStaffList.get(i).getVehicleLicenseNumber();
 			}
-			lotPanelList.removeAll();
-			table = new JTable(data, lotColumns);
+			staffListPanel.removeAll();
+			table = new JTable(staffData, staffColumns);
 			table.getModel().addTableModelListener(this);
 			scrollPane = new JScrollPane(table);
-			lotPanelList.add(scrollPane);
-			lotPanelList.revalidate();
+			staffListPanel.add(scrollPane);
+			staffListPanel.revalidate();
 			this.repaint();
 			
 		} else if (e.getSource() == searchLotsBtn) {
-			lotPanelList.removeAll();
-			lotPanelList.add(pnlSearch);
-			lotPanelList.revalidate();
+			staffListPanel.removeAll();
+			staffListPanel.add(pnlSearch);
+			staffListPanel.revalidate();
 			this.repaint();
 		} else if (e.getSource() == addLotsButton) {
-			lotPanelList.removeAll();
-			lotPanelList.add(pnlAdd);
-			lotPanelList.revalidate();
+			staffListPanel.removeAll();
+			staffListPanel.add(pnlAdd);
+			staffListPanel.revalidate();
 			this.repaint();
 			
 		} else if (e.getSource() == searchLotsPanelBtn) {
-			String lotName = lotNameField.getText();
-			if (lotName.length() > 0) {
+			int staffNumber = Integer.parseInt(staffField[0].getText());
+			if (staffNumber > 0) {
 				try {
-					myLotList = db.getLots(lotName);
+					myStaffList = db.getStaff(staffNumber);
 				}
 				catch(Exception exception) {
 					JOptionPane.showMessageDialog(this, exception.getMessage());
 					return;
 				}
-				data = new Object[myLotList.size()][lotColumns.length];
-				for (int i = 0; i < myLotList.size(); i++) {
-					data[i][0] = myLotList.get(i).getLotName();
-					data[i][1] = myLotList.get(i).getLocation();
-					data[i][2] = myLotList.get(i).getCapacity();
-					data[i][3] = myLotList.get(i).getFloors();	
+				staffData = new Object[myStaffList.size()][staffColumns.length];
+				for (int i = 0; i < myStaffList.size(); i++) {
+					staffData[i][0] = myStaffList.get(i).getStaffNumber();
+					staffData[i][1] = myStaffList.get(i).getTelephoneExt();
+					staffData[i][2] = myStaffList.get(i).getVehicleLicenseNumber();	
 				}
-				lotPanelList.removeAll();
-				table = new JTable(data, lotColumns);
+				staffListPanel.removeAll();
+				table = new JTable(staffData, staffColumns);
 				table.getModel().addTableModelListener(this);
 				scrollPane = new JScrollPane(table);
-				lotPanelList.add(scrollPane);
-				lotPanelList.revalidate();
+				staffListPanel.add(scrollPane);
+				staffListPanel.revalidate();
 				this.repaint();
 			}
 		} else if (e.getSource() == addLotsPanelBtn) {
-			Lot lot = new Lot(lotField[0].getText(), lotField[1].getText(), 
-					Integer.parseInt(lotField[2].getText()), Integer.parseInt(lotField[3].getText()));
+			Staff staff = new Staff(Integer.parseInt(staffField[0].getText()), 
+					Integer.parseInt(staffField[1].getText()), staffField[2].getText());
 			try {
-				db.addLot(lot);
+				db.addStaff(staff);
 			}
 			catch(Exception exception) {
 				JOptionPane.showMessageDialog(this, exception.getMessage());
 				return;
 			}
 			JOptionPane.showMessageDialog(null, "Added Successfully!");
-			for (int i = 0; i < lotField.length; i++) {
-				lotField[i].setText("");
+			for (int i = 0; i < staffField.length; i++) {
+				staffField[i].setText("");
 			}
 		}
 		
@@ -225,7 +225,7 @@ public class ParkingGUI extends JFrame implements ActionListener, TableModelList
         String columnName = model.getColumnName(column);
         Object data = model.getValueAt(row, column);
         try {
-        	 db.updateLot(row, columnName, data);;
+        	 db.updateStaff(row, columnName, data);;
 		}
 		catch(Exception exception) {
 			JOptionPane.showMessageDialog(this, exception.getMessage());

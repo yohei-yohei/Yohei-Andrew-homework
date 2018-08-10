@@ -22,7 +22,7 @@ public class Staff {
 	
 	@Override
 	public String toString() {
-		return "Staff [Staff Name = " + myStaffNumber + ", Telephone Extension = " + myTelephoneExt + ", Vehicle License Number = "
+		return "Staff [Staff Number = " + myStaffNumber + ", Telephone Extension = " + myTelephoneExt + ", Vehicle License Number = "
 		+ myVehicleLicenseNumber + "]";
 	}
 
